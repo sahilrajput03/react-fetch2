@@ -2,37 +2,37 @@
 import axios from 'axios';
 import {useState, useEffect} from 'react';
 
-export const reactAxios = (...params) => {
-  const [anecdotes, setAnecdotes] = useState(null);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    let asyncFun = async () => {
-      try {
-        const {data} = await axios(...params);
-        setAnecdotes(data);
-      } catch (error) {
-        setError(String(error));
-      }
-    };
-    asyncFun();
-  }, []);
+let fetchData = async (params, setData, setLoading, setLoaded, setError) => {
+  try {
+    // Resetting the state coz if we `refresh` we need to reset the state of the request.
+    setLoading(true);
+    setLoaded(false);
+    setError(null);
 
-  const refresh = () => {
-    /* 100% same code as used in useEffect */
-    let asyncFun = async () => {
-      try {
-        setError(undefined);
-        const {data} = await axios(...params);
-        setAnecdotes(data);
-      } catch (error) {
-        setError(String(error));
-      }
-    };
-    asyncFun();
+    const {data} = await axios(...params);
+    setData(data);
+    setLoading(false);
+    setLoaded(true);
+  } catch (error) {
+    setError(String(error));
+    setLoaded(false);
+    setLoading(false);
+  }
+};
+export const reactAxios = (...params) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(null);
+
+  const refreshFn = () => {
+    fetchData(params, setData, setLoading, setLoaded, setError);
   };
-  return [anecdotes, refresh, error];
+
+  useEffect(refreshFn, []);
+
+  return {data, refreshFn, error, loading, loaded};
 };
 
 /* Motivation to make this */
 // import useAxios from 'react-axios-hook';
-

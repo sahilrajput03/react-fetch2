@@ -1,66 +1,52 @@
 /* eslint-disable */
-import { useState, useEffect } from "react";
+import {useState, useEffect} from 'react';
+
 // reactFetch has the same api as browser fetch as all paramters are passed directly to fetch function.
-export const reactFetch = (...params) => {
-  return {
-    text: () => {
-      const [anecdotes, setAnecdotes] = useState();
-      const [error, setError] = useState();
-      useEffect(() => {
-        let asyncFun = async () => {
-          try {
-            const data = await (await fetch(...params)).text();
-            setAnecdotes(data);
-          } catch (error) {
-            setError(String(error));
-          }
-        };
-        asyncFun();
-      }, []);
-      const refresh = () => {
-        let asyncFun = async () => {
-          try {
-            setError(undefined);
-            const data = await (await fetch(...params)).text();
-            setAnecdotes(data);
-          } catch (error) {
-            setError(String(error));
-          }
-        };
-        asyncFun();
-      };
-      return [anecdotes, refresh, error];
-    },
-    json: () => {
-      const [anecdotes, setAnecdotes] = useState();
-      const [error, setError] = useState();
-      useEffect(() => {
-        let asyncFun = async () => {
-          try {
-            const data = await (await fetch(...params)).text();
-            setAnecdotes(data);
-          } catch (error) {
-            setError(String(error));
-          }
-        };
-        asyncFun();
-      }, []);
-      const refresh = () => {
-        let asyncFun = async () => {
-          try {
-            setError(undefined);
-            const data = await (await fetch(...params)).text();
-            setAnecdotes(data);
-          } catch (error) {
-            setError(String(error));
-          }
-        };
-        asyncFun();
-      };
-      return [anecdotes, refresh, error];
-    },
-  };
+async function fetchData(
+  params,
+  dataType,
+  setData,
+  setLoading,
+  setLoaded,
+  setError
+) {
+  try {
+    // Resetting the state coz if we `refresh` we need to reset the state of the request.
+    setLoading(true);
+    setLoaded(false);
+    setError(null);
+
+    const data = await (await fetch(...params))[dataType](); // dataType = 'json' or 'text'
+    setData(data);
+    setLoading(false);
+    setLoaded(true);
+  } catch (error) {
+    setError(String(error));
+    setLoaded(false);
+    setLoading(false);
+  }
+}
+
+const useFetch = (params, dataType) => {
+  {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [loaded, setLoaded] = useState(false);
+    const [error, setError] = useState(null);
+
+    const refreshFn = () =>
+      fetchData(params, dataType, setData, setLoading, setLoaded, setError);
+
+    useEffect(refreshFn, []);
+
+    return {data, refreshFn, error, loading, loaded};
+  }
 };
+
+export const reactFetch = (...params) => ({
+  text: () => useFetch(params, 'text'),
+  json: () => useFetch(params, 'json'),
+});
 
 // Below library is for only class components, and its  not maintainer at all.
 // https://www.npmjs.com/package/react-fetch

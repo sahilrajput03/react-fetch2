@@ -1,18 +1,18 @@
 {
-	"name": "react-fetch2",
-	"version": "1.0.9",
-	"main": "index.js",
-	"license": "MIT",
-	"scripts": {
-		"prepub": "c Pre version commit.",
-		"pub": "yarn version --patch && yarn publish",
-		"postpub": "p"
-	},
-	"dependencies": {
-		"axios": "^0.21.1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/sahilrajput03/react-fetch2"
-	}
+  "name": "react-fetch2",
+  "version": "1.0.9",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "prepub": "git add . && git commit -m \"Pre version commit.\"",
+    "pub": "yarn version --patch && yarn publish",
+    "postpub": "git push"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sahilrajput03/react-fetch2"
+  }
 }

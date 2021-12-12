@@ -2,11 +2,25 @@ import {reactFetch, reactAxios} from 'react-fetch2';
 import './App.css';
 
 function App() {
+  return (
+    <div>
+      <ReactFetchEg />
+      <ReactAxiosEg />
+    </div>
+  );
+}
+function ReactFetchEg() {
   const anecdotes = reactFetch('https://loveapi.ml/fso/anecdotes.json').json();
-  const patients = reactAxios('https://loveapi.ml/fso/patients.json');
+  const patients = reactFetch('https://loveapi.ml/fso/patients.json').json();
+  // From anecdoes and patients: you can access the data, loading<boolean>, loaded<boolean>, error<string>, and refreshFn<function>.
 
   const loading = anecdotes.loading && patients.loading;
-  const refreshAllFn = () => anecdotes.refreshFn() && patients.refreshFn();
+  console.log(patients);
+
+  const refreshAllFn = () => {
+    anecdotes.refreshFn();
+    patients.refreshFn();
+  };
 
   return (
     <div>
@@ -19,32 +33,13 @@ function App() {
         </>
       )}
       <button onClick={refreshAllFn}>Refresh all data...</button>
-      <TestingReactFetch />
-      <TestingReactAxios />
-    </div>
-  );
-}
-function TestingReactFetch() {
-  const anecdotes = reactFetch('https://loveapi.ml/fso/anecdotes.json').json();
-
-  return (
-    <div>
-      {!anecdotes.loaded ? (
-        'Loading...'
-      ) : (
-        <>
-          <pre>{JSON.stringify(anecdotes.data, null, 2)}</pre>
-          <button onClick={() => anecdotes.refreshFn()}>
-            Refresh Anecdotes
-          </button>
-        </>
-      )}
     </div>
   );
 }
 
-function TestingReactAxios() {
+function ReactAxiosEg() {
   const anecdotes = reactAxios('https://loveapi.ml/fso/anecdotes.json');
+  // From anecdotes: you can access the data, loading<boolean>, loaded<boolean>, error<string>, and refreshFn<function>.
 
   return (
     <div>

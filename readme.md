@@ -2,30 +2,64 @@
 
 For running example, visit codesand box link [here](https://codesandbox.io/s/react-request-npm-package-example-gxi5x?file=/src/App.js).
 
-```js
+```jsx
+import {reactFetch, reactAxios} from 'react-fetch2';
+import './App.css';
 
-import {reactFetch, reactAxios} from 'react-fetch2'; 
-
-//For using reactFetch
-export default function App() {
-    const [anecdotes, refresh, error] = reactFetch(
-    'https://loveapi.ml/fso/anecdotes.json'
-  ).text();
-  const [loveapiml, refresh2, error2] = reactFetch(
-    'https://loveapi.ml/'
-  ).json();
-
-  return <div>...<div>
-}
-
-//For using reactAxios
-export default function App() {
-  const [anecdotes, refresh, error] = reactAxios(
-    'https://loveapi.ml/fso/anecdotes.json'
+function App() {
+  return (
+    <div>
+      <ReactFetchEg />
+      <ReactAxiosEg />
+    </div>
   );
-  const [loveapiml, r2, error2] = reactAxios('https://loveapi.ml/');
+}
+function ReactFetchEg() {
+  const anecdotes = reactFetch('https://loveapi.ml/fso/anecdotes.json').json();
+  const patients = reactFetch('https://loveapi.ml/fso/patients.json').json();
+  // From anecdoes and patients: you can access the data, loading<boolean>, loaded<boolean>, error<string>, and refreshFn<function>.
 
-  return <div>...<div>
+  const loading = anecdotes.loading && patients.loading;
+  console.log(patients);
+
+  const refreshAllFn = () => {
+    anecdotes.refreshFn();
+    patients.refreshFn();
+  };
+
+  return (
+    <div>
+      {loading ? (
+        'Loading...'
+      ) : (
+        <>
+          <pre>{JSON.stringify(anecdotes.data, null, 2)}</pre>
+          <pre>{JSON.stringify(patients.data, null, 2)}</pre>
+        </>
+      )}
+      <button onClick={refreshAllFn}>Refresh all data...</button>
+    </div>
+  );
 }
 
+function ReactAxiosEg() {
+  const anecdotes = reactAxios('https://loveapi.ml/fso/anecdotes.json');
+  // From anecdotes: you can access the data, loading<boolean>, loaded<boolean>, error<string>, and refreshFn<function>.
+
+  return (
+    <div>
+      {anecdotes.loading ? (
+        'Loading...'
+      ) : (
+        <>
+          <pre>{JSON.stringify(anecdotes.data, null, 2)}</pre>
+          <button onClick={() => anecdotes.refreshFn()}>
+            Refresh Anecdotes
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+export default App;
 ```

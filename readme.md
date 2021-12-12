@@ -1,4 +1,4 @@
-# Usage -
+# Usage :
 
 For running example, visit codesand box link [here](https://codesandbox.io/s/react-request-npm-package-example-gxi5x?file=/src/App.js).
 

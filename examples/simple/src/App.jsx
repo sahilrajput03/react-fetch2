@@ -1,10 +1,11 @@
 import {reactFetch, reactAxios} from 'react-fetch2';
+// Note: react-fetch2 comes straight from local version of react-fetch2. See Readme for more.
 import './App.css';
 
 function App() {
   return (
     <div>
-      <ReactFetchEg />
+      {/* <ReactFetchEg /> */}
       <ReactAxiosEg />
     </div>
   );
